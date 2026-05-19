@@ -1,0 +1,1 @@
+# Marks minereader.api as a subpackage.

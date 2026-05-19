@@ -1,0 +1,1 @@
+# Marks minereader.data as a subpackage.
