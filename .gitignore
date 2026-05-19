@@ -13,13 +13,13 @@ build/
 env/
 
 # Raw data — will be removed later to commit a sample run for reference
-data/raw/
+minereader/data/raw/
 
 # Processed PyG graphs — will be removed later to commit a sample run for reference
-data/processed/
+minereader/data/processed/
 
 # Model checkpoints — will be removed later to commit a sample run for reference
-runs/
+minereader/runs/
 
 # IDE
 .vscode/
