@@ -3,13 +3,14 @@
 # Provides a single entry point for all project operations —
 # data processing, training, inference, and API server.
 #
-# Usage: python cli.py <command> [options]
-# Run:   python cli.py --help    to see all commands
+# Usage: minereader <command> [options]
+# Run:   minereader --help    to see all commands
 
 import argparse
 import sys
 import os
 
+from minereader.config import PROCESSED_DATA_DIR
 
 def cmd_prepare(args):
     """Process raw CSV files into PyG graph objects."""
@@ -17,7 +18,7 @@ def cmd_prepare(args):
 
     datasets = args.datasets if args.datasets else ["marvin", "mclaughlin"]
     for name in datasets:
-        csv_path = os.path.join("data/raw", f"{name}.csv")
+        csv_path = os.path.join("minereader", "data", "raw", f"{name}.csv")
         if not os.path.exists(csv_path):
             print(f"[ERROR] CSV not found: {csv_path}")
             print(f"        Place your CSV at {csv_path} and try again.")
@@ -96,7 +97,7 @@ def cmd_predict(args):
     ckpt = os.path.join(RUNS_DIR, "marvin_grade", "best.pt")
     if not os.path.exists(ckpt):
         print(f"[ERROR] No trained model found at {ckpt}")
-        print("        Run: python cli.py train --model grade")
+        print("        Run: minereader train --model grade")
         sys.exit(1)
 
     model.load_state_dict(torch.load(ckpt, weights_only=True, map_location=device))
@@ -106,7 +107,7 @@ def cmd_predict(args):
         preds = model(data.x, data.edge_index).cpu().numpy().flatten()
 
     # Load grade scaling parameters for inverse transform
-    processed_path = os.path.join("data/processed", "marvin.pt")
+    processed_path = os.path.join("minereader", "data", "processed", "marvin.pt")
     if os.path.exists(processed_path):
         meta = torch.load(processed_path, weights_only=False, map_location="cpu")
         preds = preds * meta.grade_std + meta.grade_mean
@@ -137,7 +138,7 @@ def cmd_serve(args):
 def cmd_status(args):
     """Show what has been trained and what's ready to run."""
     import json
-    from config import RUNS_DIR, PROCESSED_DATA_DIR
+    from minereader.config import RUNS_DIR, PROCESSED_DATA_DIR
 
     print("\n=== MineReader Status ===\n")
 
@@ -150,7 +151,7 @@ def cmd_status(args):
             d = torch.load(path, weights_only=False, map_location="cpu")
             print(f"{name}: {d.num_nodes:,} nodes, {d.x.shape[1]} features")
         else:
-            print(f"{name}: not processed — run: python cli.py prepare")
+            print(f"{name}: not processed — run: minereader prepare")
 
     # Models
     print("\n── Trained Models ──")
@@ -174,7 +175,7 @@ def cmd_status(args):
         print(f"  Marvin — GNN best MAE       : {b['gnn_best_mae_real']:.4f} g/t")
         print(f"  Marvin — Improvement        : {b['improvement_pct']:.1f}%")
     else:
-        print("   No baseline results — run: python cli.py train --model grade")
+        print("   No baseline results — run: minereader train --model grade")
 
     transfer_path = os.path.join(RUNS_DIR, "transfer_experiment", "results.json")
     if os.path.exists(transfer_path):
@@ -185,7 +186,7 @@ def cmd_status(args):
         print(f"  McLaughlin — Scratch MAE    : {t['scratch_mae']:.4f} g/t")
         print(f"  Pre-training value          : {t['gap_pretraining_value']:+.4f} g/t")
     else:
-        print("   No transfer results — run: python cli.py train --model transfer")
+        print("   No transfer results — run: minereader train --model transfer")
 
     print()
 
@@ -204,14 +205,14 @@ commands:
   status    Show what's trained and ready
 
 examples:
-  python cli.py prepare
-  python cli.py prepare --datasets marvin
-  python cli.py train --model all
-  python cli.py train --model grade
-  python cli.py predict --input data/raw/newmine.csv
-  python cli.py serve
-  python cli.py serve --port 8080 --no-reload
-  python cli.py status
+  minereader prepare
+  minereader prepare --datasets marvin
+  minereader train --model all
+  minereader train --model grade
+  minereader predict --input data/raw/newmine.csv
+  minereader serve
+  minereader serve --port 8080 --no-reload
+  minereader status
         """
     )
 

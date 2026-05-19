@@ -148,11 +148,11 @@ if __name__ == "__main__":
 
     marvin_data, _ = load_and_prepare(
         "marvin",
-        os.path.join("data/raw", "marvin.csv")
+        os.path.join("minereader", "data", "raw", "marvin.csv")
     )
     mclaughlin_data, _ = load_and_prepare(
         "mclaughlin",
-        os.path.join("data/raw", "mclaughlin.csv")
+        os.path.join("minereader", "data", "raw", "mclaughlin.csv")
     )
 
     print("\n=== Summary ===")

@@ -2,6 +2,8 @@
 # Central place for all dataset column mappings and training hyperparameters.
 # Changing a column name here propagates everywhere — no hardcoded strings in model files.
 
+import os
+
 DEVICE = "cuda"  # will fall back to cpu in prepare_graph.py if cuda unavailable
 
 DATASET_CONFIGS = {
@@ -34,6 +36,6 @@ EPOCHS = 100
 TRAIN_SPLIT = 0.8               # 80% train, 20% test for the applied ML experiment
 
 # Paths
-RAW_DATA_DIR = "data/raw"
-PROCESSED_DATA_DIR = "data/processed"
-RUNS_DIR = "runs"
+RAW_DATA_DIR      = os.path.join("minereader", "data", "raw")
+PROCESSED_DATA_DIR = os.path.join("minereader", "data", "processed")
+RUNS_DIR          = os.path.join("minereader", "runs")

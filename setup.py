@@ -25,4 +25,12 @@ setup(
         "joblib",
         "pykrige",
     ],
+    entry_points={
+        "console_scripts": [
+            "minereader=minereader.cli:main",
+            # format: "command_name=module:function"
+            # This tells pip: when someone types 'minereader',
+            # run the main() function in cli.py
+        ],
+    },
 )

@@ -5,7 +5,7 @@ sys.path.append(".")
 from minereader.models.gcn import GradeGNN
 
 # --- Graph data ---
-data = torch.load("data/processed/marvin.pt", weights_only=False)
+data = torch.load("minereader/data/processed/marvin.pt", weights_only=False)
 print("=== Graph Data ===")
 print(f"Nodes: {data.num_nodes}")
 print(f"Node features: {data.x.shape}  (x, y, z, density, copper)")
